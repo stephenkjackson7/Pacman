@@ -8,7 +8,8 @@
 	#endif
 #endif
 #define MUNCHIECOUNT 50
-#define GHOSTCOUNT 4
+#define GHOSTCOUNT 2
+#define BLOCKS 4
 
 // Just need to include main header file
 #include "S2D/S2D.h"
@@ -59,9 +60,9 @@ struct Menu
 	Texture2D* background;
 	Vector2* stringPosition;
 	bool paused;
-	bool pKeyDown;
 	bool menu;
-	bool spaceKeyPressed;
+	bool pKeyDown;
+	bool returnKeyDown;
 };
 
 // Declares the Pacman class which inherits from the Game class.
@@ -76,25 +77,29 @@ private:
 
 	//Check methods
 	void CheckStart(Input::KeyboardState* keyboardState, Input::Keys startKey);
-	int CheckReplay(int i, Input::KeyboardState* keyboardState, Input::Keys replayKey, Input::Keys closeKey);
+	void CheckReplay(Input::KeyboardState* keyboardState, Input::Keys replayKey, Input::Keys closeKey);
 	void CheckPaused(Input::KeyboardState* keyboardState, Input::Keys pauseKey);
+	void CheckWin();
 	void CheckViewportCollision();
 	void CheckGhostCollisions();
 	void CheckMunchieCollisions();
 	void CheckCherryCollision();
+	void CheckBlockCollisions();
 
 	//Update methods
 	void UpdatePacman(int elapsedTime);
 	void UpdateCherry(int elapsedTime);
 	void UpdateMunchies(Enemy&, int elapsedTime);
 	void UpdateGhost(MovingEnemy*, int elapsedTime);
-	void SpawnCherry();
-	void music();
+	void RedGhost(MovingEnemy*, int elapsedTime);
+	void BlueGhost(MovingEnemy*, int elapsedTime);
 
 	// Data for Sound Effects
 	SoundEffect* _munchieEat;
 	SoundEffect* _music;
 	SoundEffect* _cherryEat;
+	SoundEffect* _loseSound;
+	SoundEffect* _winSound;
 
 	// Data to represent Pacman
 	Player* _pacman;
@@ -102,10 +107,12 @@ private:
 	// Data to represent Enemy
 	Enemy* _munchies;
 	Enemy* _cherry;
+	Enemy* _blocks;
 
 	// Data to represent MovingEnemy
-
 	MovingEnemy* _ghosts[GHOSTCOUNT];
+	MovingEnemy* _redGhost;
+	MovingEnemy* _blueGhost;
 
 	// Position for String
 	Vector2* _stringPosition;
@@ -114,10 +121,16 @@ private:
 	Menu* _pause;
 	Menu* _start;
 	Menu* _gameOver;
+	Menu* _winScreen;
 
 	bool _rKeyDown;
+	bool _musicStatus;
+	bool _gameWin;
+
 	int _score;
 	int _cherryCounter;
+	int _winCounter;
+
 
 
 public:
